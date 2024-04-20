@@ -1,21 +1,20 @@
 import Book from "../model/model-books.js";
-  
 
-export default function books (server, mongoose) {
-
-server.get('/api/books', async (req, res) => {
+export default function books(server, mongoose) {
+  // Hämtar alla böcker
+  server.get('/api/books', async (req, res) => {
     try {
-      const books = await Book.find();  // Använder Mongoose's "find"-metod för att hämta alla "books".
+      const books = await Book.find();
       res.json(books);
     } catch (error) {
       res.status(500).json({ message: "Ett fel uppstod på servern vid hämtning av böcker." });
     }
   });
 
-  // Skapar en GET-route för att hämta en specifik bok med ett specifikt ID.
+  // Hämtar en specifik bok med ett specifikt ID
   server.get('/api/books/:id', async (req, res) => {
     try {
-      const book = await Book.findById(req.params.id); // Hämtar boken med ID från databasen.
+      const book = await Book.findById(req.params.id);
       if (!book) {
         return res.status(404).json({ message: "Boken hittades inte" });
       }
@@ -25,52 +24,58 @@ server.get('/api/books', async (req, res) => {
     }
   });
 
-  // Skapar en POST-route för att lägga till en ny bok.
+  // Skapar en ny bok
   server.post('/api/books', async (req, res) => {
     try {
       const newBook = new Book({
         Name: req.body.Name,
         ISBN: req.body.ISBN,
         Price: req.body.Price,
-        Genre: req.body.Genre // Lägg till genren från request body.
+        Genre: req.body.Genre,
+        ReleaseDate: req.body.ReleaseDate  // Inkluderar 'ReleaseDate'
       });
 
-      const savedBook = await newBook.save(); // Spara den nya boken i databasen.
-
-      res.status(201).json(savedBook); // Skicka tillbaka den sparade boken som JSON.
-
+      const savedBook = await newBook.save();
+      res.status(201).json(savedBook);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Ett fel uppstod på servern vid skapande av ny bok." });
     }
   });
 
-  // Skapar en PUT-route för att uppdatera en bok med ett specifikt ID.
+  // Uppdaterar en befintlig bok
   server.put('/api/books/:id', async (req, res) => {
     try {
-      const updatedBook = await Book.findByIdAndUpdate(req.params.id, req.body); // Returnerar den uppdaterade boken.
+      const bookUpdate = {
+        Name: req.body.Name,
+        ISBN: req.body.ISBN,
+        Price: req.body.Price,
+        Genre: req.body.Genre,
+        ReleaseDate: req.body.ReleaseDate  // Inkluderar 'ReleaseDate' i uppdateringen
+      };
+
+      const updatedBook = await Book.findByIdAndUpdate(req.params.id, bookUpdate, { new: true });
       if (!updatedBook) {
         return res.status(404).json({ message: "Boken hittades inte" });
       }
-      res.json(updatedBook); // Skickar tillbaka den uppdaterade boken som JSON.
+      res.json(updatedBook);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Ett fel uppstod på servern vid uppdatering av bok." });
     }
   });
 
-  // Skapar en DELETE-route för att radera en bok med ett specifikt ID.
+  // Raderar en bok
   server.delete('/api/books/:id', async (req, res) => {
     try {
       const deletedBook = await Book.findByIdAndDelete(req.params.id);
       if (!deletedBook) {
         return res.status(404).json({ message: "Boken hittades inte" });
       }
-      res.json({ message: "Boken har raderats!" }); // Bekräftelse på att boken har raderats.
+      res.json({ message: "Boken har raderats!" });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Ett fel uppstod på servern vid radering av bok." });
     }
   });
-
 }
