@@ -29,4 +29,7 @@ express mongoose
 Start av server
 
 node server.js
+
+Dokumentation API
+https://documenter.getpostman.com/view/33817987/2sA3Boargp
  
