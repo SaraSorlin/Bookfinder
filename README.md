@@ -24,8 +24,6 @@ Installation
 
 npm install
 
-npm install 
-
 express mongoose
 
 Start av server
