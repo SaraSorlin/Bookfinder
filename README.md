@@ -22,7 +22,9 @@ Creates a new book entry in the database.
 
 Installation
 npm install
-npm install express mongoose
+
+npm install 
+express mongoose
 
 Start av server
 node server.js
