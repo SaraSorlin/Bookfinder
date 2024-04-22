@@ -44,7 +44,7 @@ mongoose.connect("mongodb+srv://sara:120117@cluster0.imwjqrl.mongodb.net/Bokhand
 server.get("/api/books", async (req, res) => {
   try {
     // Extraherar sökparametrar från förfrågningen
-    const { page = 1, limit = 10, name, isbn, price, genre, releaseDate } = req.query;
+    const { page = 1, limit = 50, name, isbn, price, genre, releaseDate } = req.query;
     const query = {};
 
 
