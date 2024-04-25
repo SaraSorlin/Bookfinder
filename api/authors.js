@@ -30,8 +30,8 @@ export default function author(server, mongoose) {
   server.post('/api/authors', async (req, res) => {
     try {
       const newAuthor = new Author({
-        author: req.body.author, // Fixat stavfel här
-        book: req.body.book // Fixat stavfel här
+        author: req.body.author,
+        book: req.body.book
       });
 
       const savedAuthor = await newAuthor.save(); // Spara den nya författaren i databasen.

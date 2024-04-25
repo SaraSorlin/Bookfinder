@@ -32,7 +32,7 @@ export default function books(server, mongoose) {
         ISBN: req.body.ISBN,
         Price: req.body.Price,
         Genre: req.body.Genre,
-        ReleaseDate: req.body.ReleaseDate  // Inkluderar 'ReleaseDate'
+        ReleaseDate: req.body.ReleaseDate
       });
 
       const savedBook = await newBook.save();
@@ -58,7 +58,7 @@ export default function books(server, mongoose) {
       if (!updatedBook) {
         return res.status(404).json({ message: "Boken hittades inte" });
       }
-      res.json({ updated: true, book: updatedBook }); // Include 'updated' field to indicate success
+      res.json({ updated: true, book: updatedBook });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Ett fel uppstod på servern vid uppdatering av bok." });
