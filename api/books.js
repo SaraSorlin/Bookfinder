@@ -51,19 +51,20 @@ export default function books(server, mongoose) {
         ISBN: req.body.ISBN,
         Price: req.body.Price,
         Genre: req.body.Genre,
-        ReleaseDate: req.body.ReleaseDate  // Inkluderar 'ReleaseDate' i uppdateringen
+        ReleaseDate: req.body.ReleaseDate
       };
 
       const updatedBook = await Book.findByIdAndUpdate(req.params.id, bookUpdate, { new: true });
       if (!updatedBook) {
         return res.status(404).json({ message: "Boken hittades inte" });
       }
-      res.json(updatedBook);
+      res.json({ updated: true, book: updatedBook }); // Include 'updated' field to indicate success
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Ett fel uppstod på servern vid uppdatering av bok." });
     }
   });
+
 
   // Raderar en bok
   server.delete('/api/books/:id', async (req, res) => {
