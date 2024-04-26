@@ -1,3 +1,6 @@
+Jag satsar på betyg G.
+
+
 # Bookfinder
 
 Detta API är för närvarande i version 0.9.1.1.
