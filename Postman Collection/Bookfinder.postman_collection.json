@@ -1,0 +1,1309 @@
+{
+	"info": {
+		"_postman_id": "175c137c-216b-4bdf-80da-04f014ab1234",
+		"name": "SARAS Bookfinder",
+		"description": "# API-dokumentation\n\nDetta API är för närvarande i version 0.9.1.1.\n\n## Översikt\n\nDetta API tillåter användare att interagera med en databas för en bokhandel, inklusive operationer för att hantera böcker och författare. Det är byggt med Node.js, Express och MongoDB.\n\n## Bas-URL\n\nAlla URL:er som refereras i dokumentationen har följande bas:  \n`http://localhost:3000/api`\n\nDenna bas-URL kommer att ändras beroende på driftsmiljön.\n\n## Autentisering\n\nDetta API använder inga API-nycklar än för att tillåta åtkomst till API:t.\n\n## Felhantering\n\n200 OK\\` - Begäran har lyckats.  \n400 Felaktig Begäran\\` - Servern kunde inte förstå begäran på grund av ogiltig syntax.  \n404 Hittades Inte\\` - Den begärda resursen kunde inte hittas.  \n500 Internt Serverfel - Servern stötte på ett problem som den inte vet hur den skall hantera\n\nCreates a new book entry in the database.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33817987"
+	},
+	"item": [
+		{
+			"name": "Automatiska Tester",
+			"item": [
+				{
+					"name": "1. Validate GET Books that the API returns the correct HTTP status code (200 OK)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/books?name=Awesome Steel Chair 1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"books"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Awesome Steel Chair 1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2 Verify that the API returns the expected data format (e.g., JSON, XML) in the response.",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test('Response is in JSON format', function () {",
+									"    pm.response.to.be.json;",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/books?name=Awesome Steel Chair 1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"books"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Awesome Steel Chair 1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Validate an invalid requests GET Books that the API returns the correct HTTP status code (400 Bad Request)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/books?name=!%#",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"books"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "!%"
+								}
+							],
+							"hash": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. Validate request GET Books with specific filters or search criteria and checks if the API returns the correct data.",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is in JSON format\", function() {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Response correctly filtered\", function() {",
+									"    var jsonData = pm.response.json();",
+									"    // Check if the response is not empty",
+									"    if (jsonData.length > 0) {",
+									"        pm.expect(jsonData[0].Name).to.include(\"the cute duck 3\");",
+									"        pm.expect(jsonData[0].ISBN).to.eql(\"123456567\");",
+									"        pm.expect(jsonData[0].Price).to.eql(2000);",
+									"        pm.expect(jsonData[0].Genre).to.include(\"Horror\");",
+									"        // Correctly handle and parse the release date",
+									"        var releaseDate = new Date(jsonData[0].ReleaseDate);",
+									"        pm.expect(releaseDate.toISOString().slice(0, 10)).to.eql(\"2024-03-20\");",
+									"    } else {",
+									"        console.log(\"No data matches the filters\");",
+									"        // Optionally, you can fail the test if no data is expected to be empty",
+									"        // pm.expect.fail(\"No data returned for the applied filters\");",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/books?name=Awesome Steel Chair 1&isbn=3629663257859&price=353&genre=Jazz&releaseDate=2021-08-12",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"books"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Awesome Steel Chair 1"
+								},
+								{
+									"key": "isbn",
+									"value": "3629663257859"
+								},
+								{
+									"key": "price",
+									"value": "353"
+								},
+								{
+									"key": "genre",
+									"value": "Jazz"
+								},
+								{
+									"key": "releaseDate",
+									"value": "2021-08-12"
+								}
+							]
+						},
+						"description": "### Get Books with Filters\n\nRetrieve books from the database that match specified criteria. Multiple query parameters can be combined to refine search results.\n\n- **URL**: `/books`\n- **Method**: `GET`\n- **Query Parameters**:\n    - `name`: Filter books by partial or full book name. Case insensitive.\n        - Type: `string`\n        - Example: `name=Awesome Steel Chair`\n    - `isbn`: Filter books by ISBN number.\n        - Type: `number`\n        - Example: `isbn=3629663257859`\n    - `price`: Filter books by price, returning books that are priced less than or equal to the specified amount.\n        - Type: `number`\n        - Example: `price=353`\n    - `genre`: Filter books by genre.\n        - Type: `string`\n        - Example: `genre=Jazz`\n    - `releaseDate`: Filter books by release date, returning books released on or after the specified date.\n        - Type: `date` (format: YYYY-MM-DD)\n        - Example: `releaseDate=2021-08-12`\n- \\[ { \"Name\": \"Awesome Steel Chair\", \"ISBN\": 3629663257859, \"Price\": 350, \"Genre\": \"Jazz\", \"ReleaseDate\": \"2021-08-12\" }\\]"
+					},
+					"response": []
+				},
+				{
+					"name": "5. Validate GET Books that the API returns paginated results when a large number of records are requested.",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test that the status code is 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Test that the response contains the correct number of items\r",
+									"pm.test(\"Response contains correct number of items\", function () {\r",
+									"    let responseData = pm.response.json();\r",
+									"    pm.expect(responseData.books).to.be.an('array');\r",
+									"    pm.expect(responseData.books.length).to.equal(25);  // Checks if the number of books returned matches the limit\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/books?page=1&limit=25",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"books"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "25"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6. Validate if the API handles special characters and non-English text correctly in input data and returned responses using an automated testing tool.",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response contains books with special characters the API handle it\", function() {\r",
+									"    const response = pm.response.json();\r",
+									"    const containsSpecialChars = response.books.some(book => \r",
+									"        /[ÄÅÖäåö]/.test(book.Name));\r",
+									"    pm.expect(containsSpecialChars).to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": " application/json; charset=utf-8",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/books?name=En bok med ÄÅÖ",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"books"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "En bok med ÄÅÖ"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7. Validate concurrent requests to the API to ensure that it can handle multiple users and maintain data consistency.",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Simulate concurrent requests\", function() {",
+									"    const url = pm.environment.get('url') + '/api/books';",
+									"    // Create multiple requests to simulate concurrency",
+									"    const request1 = new Promise((resolve, reject) => {",
+									"        pm.sendRequest(url, (err, response) => {",
+									"            if (err) reject(err);",
+									"            if (response.code !== 200 && response.code !== 429) {",
+									"                reject(new Error(`Unexpected status code: ${response.code}`));",
+									"            }",
+									"            resolve(response.code);",
+									"        });",
+									"    });",
+									"    ",
+									"    const request2 = new Promise((resolve, reject) => {",
+									"        pm.sendRequest(url, (err, response) => {",
+									"            if (err) reject(err);",
+									"            if (response.code !== 200 && response.code !== 429) {",
+									"                reject(new Error(`Unexpected status code: ${response.code}`));",
+									"            }",
+									"            resolve(response.code);",
+									"        });",
+									"    });",
+									"",
+									"    Promise.all([request1, request2])",
+									"        .then((results) => {",
+									"            pm.expect(results.every(code => code === 200 || code === 429)).to.be.true;",
+									"        })",
+									"        .catch((error) => {",
+									"            console.error(error);",
+									"            pm.expect.fail(error.message);",
+									"        });",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/books",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8 Validate PUT API correctly handles different HTTP methods for each endpoint and returns appropriate status codes and responses for each method.",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Verify data is updated correctly', function () {",
+									"    var responseJson = pm.response.json();",
+									"    // Trim the string to remove any extra whitespace",
+									"    pm.expect(responseJson.book.Name.trim()).to.eql(\"En bok om POST sucess 2\");",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"En bok om POST sucess 2 \",\r\n    \"ISBN\": 123456,\r\n    \"Price\": 3000,\r\n    \"Genre\": \"drama\",\r\n    \"ReleaseDate\": \"2024-01-20\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/books/662aa196cdec73d79be79845",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"books",
+								"662aa196cdec73d79be79845"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "9 Validate POST API correctly handles different HTTP methods PUT for each endpoint and returns appropriate status codes and responses for each method.",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response contains newly created book\", function() {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('_id'); ",
+									"});",
+									"",
+									"pm.test(\"Response contains newly created\", function() {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('_id');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"Name\": \"En bok om POST sucess \",\r\n        \"ISBN\": 123456,\r\n        \"Price\": 3000,\r\n        \"Genre\": \"drama\",\r\n        \"ReleaseDate\": \"2024-01-20\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/books",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "10 Validate performance test that simulates a large number of users making requests simultaneously to check the API’s performance under heavy load.",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const url = pm.environment.get('http://localhost:3000/api/books'); // Get API URL from environment variable\r",
+									"\r",
+									"// Define request payload\r",
+									"const payload = { \r",
+									"    /* Define request payload here */ \r",
+									"};\r",
+									"\r",
+									"// Send a request in each iteration\r",
+									"pm.sendRequest({\r",
+									"    url: url,\r",
+									"    method: 'POST',\r",
+									"    header: {\r",
+									"        'Content-Type': 'application/json',\r",
+									"        /* Add other headers if necessary */\r",
+									"    },\r",
+									"    body: JSON.stringify(payload),\r",
+									"}, function (err, res) {\r",
+									"    if (err === undefined) {\r",
+									"        console.log(res.json()); // Log the response for analysis\r",
+									"\r",
+									"        // Add assertions to validate the response\r",
+									"        pm.test('Response status code is 200', function () {\r",
+									"            pm.expect(res.code).to.equal(200);\r",
+									"        });\r",
+									"\r",
+									"        // Add more assertions as needed\r",
+									"    } else {\r",
+									"        console.error(err);\r",
+									"        pm.test('Request failed', function () {\r",
+									"            pm.expect.fail('Request failed: ' + err.message);\r",
+									"        });\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/books",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"books"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Manuella Tester",
+			"item": [
+				{
+					"name": "authors",
+					"item": [
+						{
+							"name": "authors",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/authors",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"authors"
+									]
+								},
+								"description": "### Get all Author\n\n- **URL**: `/authors`\n    \n- **Metod**: `GET`\n    \n- **Parametrar**: Inga\n    \n- **Exempel på begäran**:"
+							},
+							"response": []
+						},
+						{
+							"name": "authors by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/authors/661c40e1fee634aff5010872",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"authors",
+										"661c40e1fee634aff5010872"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "authors",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"author\": \"Sara\",\r\n    \"book\": \"skit tråkig bok2\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/authors/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"authors",
+										""
+									]
+								},
+								"description": "#### Add an Author\n\nCreates a new author entry in the database.\n\n- **URL**: `/authors`\n    \n- **Method**: `POST`\n    \n- **Required Headers**: `Content-Type: application/json`\n    \n- **Body Parameters**:\n    \n    - `Name`: The name of the author.\n        \n    - `Nationality`: The nationality of the author."
+							},
+							"response": []
+						},
+						{
+							"name": "authors by id",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"author\": \"Alfredo Koepp 1\",\r\n\"book\": \"Awesome Steel Chair\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/authors/66245b069b8e686f67f2fefe",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"authors",
+										"66245b069b8e686f67f2fefe"
+									]
+								},
+								"description": "#### Update an Author\n\nUpdates an existing author entry in the database.\n\n- **URL**: `/authors/:id`\n    \n- **Method**: `PUT`\n    \n- **Required Headers**: `Content-Type: application/json`\n    \n- **URL Parameters**:\n    \n    - `id` _(required)_: The ID of the author to update.\n        \n- **Body Parameters**:\n    \n    - Any author field (`Name`, `Nationality`) that needs updating."
+							},
+							"response": []
+						},
+						{
+							"name": "delete authors by id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/authors/66245b069b8e686f67f2ff02",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"authors",
+										"66245b069b8e686f67f2ff02"
+									]
+								},
+								"description": "#### Delete an Author\n\nDeletes an author entry from the database.\n\n- **URL**: `/authors/:id`\n    \n- **Method**: `DELETE`\n    \n- **URL Parameters**:\n    \n    - `id` _(required)_: The ID of the author to delete."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Books",
+					"item": [
+						{
+							"name": "books",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/books",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"books"
+									]
+								},
+								"description": "This returns all books"
+							},
+							"response": []
+						},
+						{
+							"name": "books by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/books/66245b069b8e686f67f2fefc",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"books",
+										"66245b069b8e686f67f2fefc"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "books",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "    {\r\n        \"Name\": \"En bok med #¤%&&\",\r\n        \"ISBN\": 123456,\r\n        \"Price\": 3000,\r\n        \"Genre\": \"drama\",\r\n        \"ReleaseDate\": \"2024-01-20\"\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/books/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"books",
+										""
+									]
+								},
+								"description": "Creates a new book entry in the database.\n\n- **URL**: `/books`\n    \n- **Method**: `POST`\n    \n- **Required Headers**: `Content-Type: application/json`\n    \n- **Body Parameters**:\n    \n    - `Name`: The name of the book.\n        \n    - `ISBN`: The book's ISBN number.\n        \n    - `Price`: The price of the book.\n        \n    - `Genre`: The genre of the book.\n        \n    - `ReleaseDate`: The release date of the book."
+							},
+							"response": []
+						},
+						{
+							"name": "ändra books by id",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "        {\r\n            \"Name\": \"Awesome Steel Chair 1\",\r\n            \"ISBN\": 3629663257859,\r\n            \"Price\": 353,\r\n            \"Genre\": \"Jazz\",\r\n            \"ReleaseDate\": \"2021-08-12\"\r\n        }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/books/66245b069b8e686f67f2fefc",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"books",
+										"66245b069b8e686f67f2fefc"
+									]
+								},
+								"description": "#### Update a Book\n\nUpdates an existing book entry in the database.\n\n- **URL**: `/books/:id`\n    \n- **Method**: `PUT`\n    \n- **Required Headers**: `Content-Type: application/json`\n    \n- **URL Parameters**:\n    \n    - `id` _(required)_: The ID of the book to update.\n        \n- **Body Parameters**:\n    \n    - Any book field (`Name`, `ISBN`, `Price`, `Genre`, `ReleaseDate`) that needs updating."
+							},
+							"response": []
+						},
+						{
+							"name": "delete boks by id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/books/66245b069b8e686f67f2ff0c",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"books",
+										"66245b069b8e686f67f2ff0c"
+									]
+								},
+								"description": "#### Delete a Book\n\nDeletes a book entry from the database.\n\n- **URL**: `/books/:id`\n    \n- **Method**: `DELETE`\n    \n- **URL Parameters**:\n    \n    - `id` _(required)_: The ID of the book to delete."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "1. Validate GET Books that the API returns the correct HTTP status code (200 OK)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/books?name=Awesome Steel Chair 1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"books"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Awesome Steel Chair 1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2 Verify that the API returns the expected data format (e.g., JSON, XML) in the response.",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/books?name=Awesome Steel Chair 1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"books"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Awesome Steel Chair 1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Validate an invalid requests GET Books that the API returns the correct HTTP status code (400 Bad Request)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/books?name=!%#",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"books"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "!%"
+								}
+							],
+							"hash": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. Validate request GET Books with specific filters or search criteria and checks if the API returns the correct data.",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/books?name=Awesome Steel Chair 1&isbn=3629663257859&price=353&genre=Jazz&releaseDate=2021-08-12",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"books"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Awesome Steel Chair 1"
+								},
+								{
+									"key": "isbn",
+									"value": "3629663257859"
+								},
+								{
+									"key": "price",
+									"value": "353"
+								},
+								{
+									"key": "genre",
+									"value": "Jazz"
+								},
+								{
+									"key": "releaseDate",
+									"value": "2021-08-12"
+								}
+							]
+						},
+						"description": "### Get Books with Filters\n\nRetrieve books from the database that match specified criteria. Multiple query parameters can be combined to refine search results.\n\n- **URL**: `/books`\n    \n- **Method**: `GET`\n    \n- **Query Parameters**:\n    \n    - `name`: Filter books by partial or full book name. Case insensitive.\n        \n        - Type: `string`\n            \n        - Example: `name=Awesome Steel Chair`\n            \n    - `isbn`: Filter books by ISBN number.\n        \n        - Type: `number`\n            \n        - Example: `isbn=3629663257859`\n            \n    - `price`: Filter books by price, returning books that are priced less than or equal to the specified amount.\n        \n        - Type: `number`\n            \n        - Example: `price=353`\n            \n    - `genre`: Filter books by genre.\n        \n        - Type: `string`\n            \n        - Example: `genre=Jazz`\n            \n    - `releaseDate`: Filter books by release date, returning books released on or after the specified date.\n        \n        - Type: `date` (format: YYYY-MM-DD)\n            \n        - Example: `releaseDate=2021-08-12`\n            \n- \\[ { \"Name\": \"Awesome Steel Chair\", \"ISBN\": 3629663257859, \"Price\": 350, \"Genre\": \"Jazz\", \"ReleaseDate\": \"2021-08-12\" }\\]"
+					},
+					"response": []
+				},
+				{
+					"name": "5. Validate GET Books that the API returns paginated results when a large number of records are requested.",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/books?page=1&limit=25",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"books"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "25"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6. Validate if the API handles special characters and non-English text correctly in input data and returned responses using an automated testing tool.",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": " application/json; charset=utf-8",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/books?name=En bok med ÄÅÖ",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"books"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "En bok med ÄÅÖ"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7. Validate concurrent requests to the API to ensure that it can handle multiple users and maintain data consistency.",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/books",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8 Validate PUT API correctly handles different HTTP methods for each endpoint and returns appropriate status codes and responses for each method.",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"En bok om POST sucess 2 \",\r\n    \"ISBN\": 123456,\r\n    \"Price\": 3000,\r\n    \"Genre\": \"drama\",\r\n    \"ReleaseDate\": \"2024-01-20\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/books/662aa196cdec73d79be79845",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"books",
+								"662aa196cdec73d79be79845"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "9 Validate POST API correctly handles different HTTP methods PUT for each endpoint and returns appropriate status codes and responses for each method.",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"Name\": \"En bok om POST sucess \",\r\n        \"ISBN\": 123456,\r\n        \"Price\": 3000,\r\n        \"Genre\": \"drama\",\r\n        \"ReleaseDate\": \"2024-01-20\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/books",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "10 Validate performance test that simulates a large number of users making requests simultaneously to check the API’s performance under heavy load.",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/books",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"books"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
