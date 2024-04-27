@@ -11,7 +11,9 @@ API:t är utvecklat med:
 
 Node.js: 
 Express:
-MongoDB: En NoSQL-databas hostad  i molnet
+MongoDB: En NoSQL-databas hostad  i molnet på nedan plats
+
+mongodb+srv://sara:120117@cluster0.imwjqrl.mongodb.net/Bokhandel
 
 Bas-URL
 Alla URL:er som refereras i dokumentationen utgår från:
@@ -35,6 +37,8 @@ Kör följande kommando i terminalen inuti projektmappen för att installera de 
 npm install
 npm install express mongoose
 node server.js
+
+
 
 
 Du bör se en utskrift i terminalen som bekräftar att servern körs, vanligtvis något i stil med "Server running on http://localhost:3000".
