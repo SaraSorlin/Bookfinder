@@ -52,7 +52,7 @@ Du bör få ett JSON-svar som listar de böcker som finns i databasen, vilket be
 
 Användning och Exempel
 För att komma igång med att använda API:t, se detaljerad dokumentation och exempel här:
-https://documenter.getpostman.com/view/33817987/2sA3Boargp
+/API Dokumentation/Sara Sörlin Bookfinder API.docx
 
 Postman collection
 https://api.postman.com/collections/33817987-175c137c-216b-4bdf-80da-04f014ab1234?access_key=PMAT-01HVZ5881GXWTV9H7FS4VM362C
