@@ -56,6 +56,7 @@ För att komma igång med att använda API:t, se detaljerad dokumentation och ex
 
 Postman collection
 https://api.postman.com/collections/33817987-175c137c-216b-4bdf-80da-04f014ab1234?access_key=PMAT-01HVZ5881GXWTV9H7FS4VM362C
+
  
 
 Felhantering
