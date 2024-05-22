@@ -2,9 +2,10 @@
 	"info": {
 		"_postman_id": "175c137c-216b-4bdf-80da-04f014ab1234",
 		"name": "SARAS Bookfinder",
-		"description": "# API-dokumentation\n\nDetta API är för närvarande i version 0.9.1.1.\n\n## Översikt\n\nDetta API tillåter användare att interagera med en databas för en bokhandel, inklusive operationer för att hantera böcker och författare. Det är byggt med Node.js, Express och MongoDB.\n\n## Bas-URL\n\nAlla URL:er som refereras i dokumentationen har följande bas:  \n`http://localhost:3000/api`\n\nDenna bas-URL kommer att ändras beroende på driftsmiljön.\n\n## Autentisering\n\nDetta API använder inga API-nycklar än för att tillåta åtkomst till API:t.\n\n## Felhantering\n\n200 OK\\` - Begäran har lyckats.  \n400 Felaktig Begäran\\` - Servern kunde inte förstå begäran på grund av ogiltig syntax.  \n404 Hittades Inte\\` - Den begärda resursen kunde inte hittas.  \n500 Internt Serverfel - Servern stötte på ett problem som den inte vet hur den skall hantera\n\nCreates a new book entry in the database.",
+		"description": "# API-dokumentation\n\nDetta API är för närvarande i version 0.9.1.1.\n\n## Översikt\n\nDetta API tillåter användare att interagera med en databas för en bokhandel, inklusive operationer för att hantera böcker och författare. Det är byggt med Node.js, Express och MongoDB.\n\n## Bas-URL\n\nAlla URL:er som refereras i dokumentationen har följande bas:  \n**{{base_url}}/api**\n\nDenna bas-URL kommer att ändras beroende på driftsmiljön.\n\n## Autentisering\n\nDetta API använder inga API-nycklar än för att tillåta åtkomst till API:t.\n\n## Felhantering\n\n200 OK\\` - Begäran har lyckats.  \n400 Felaktig Begäran\\` - Servern kunde inte förstå begäran på grund av ogiltig syntax.  \n404 Hittades Inte\\` - Den begärda resursen kunde inte hittas.  \n500 Internt Serverfel - Servern stötte på ett problem som den inte vet hur den skall hantera\n\nCreates a new book entry in the database.\n\n## Endpoints\n\n### 1\\. Böcker\n\n- **GET** **`/api/books`**\n    \n    - Beskrivning: Hämtar alla böcker från databasen.\n        \n    - Parametrar:\n        \n        - `page`: {{page}}\n            \n        - `limit`: {{limit}}\n            \n        - `name`: {{book_name}}\n            \n        - `isbn`: {{isbn}}\n            \n        - `price`: {{price}}\n            \n        - `genre`: {{genre}}\n            \n        - `releaseDate`: {{release_date}}\n            \n- **GET** **`/api/books/{{book_id}}`**\n    \n    - Beskrivning: Hämtar en specifik bok baserat på ID.\n        \n- **POST** **`/api/books`**\n    \n    - Beskrivning: Skapar en ny bokpost i databasen.\n        \n    - Body-parametrar:\n        \n        - `Name`: Namn på boken.\n            \n        - `ISBN`: Bokens ISBN-nummer.\n            \n        - `Price`: Bokens pris.\n            \n        - `Genre`: Bokens genre.\n            \n        - `ReleaseDate`: Bokens utgivningsdatum.\n            \n- **PUT** **`/api/books/{{book_id}}`**\n    \n    - Beskrivning: Uppdaterar en befintlig bokpost baserat på ID.\n        \n- **DELETE** **`/api/books/{{book_id}}`**\n    \n    - Beskrivning: Tar bort en bokpost baserat på ID.\n        \n\n### 2\\. Författare\n\n- **GET** **`/api/authors`**\n    \n    - Beskrivning: Hämtar alla författare från databasen.\n        \n- **GET** **`/api/authors/{{author_id}}`**\n    \n    - Beskrivning: Hämtar en specifik författare baserat på ID.\n        \n- **POST** **`/api/authors`**\n    \n    - Beskrivning: Skapar en ny författarpost i databasen.\n        \n    - Body-parametrar:\n        \n        - `author`: Namn på författaren.\n            \n        - `book`: Namn på författarens bok.\n            \n- **PUT** **`/api/authors/{{author_id}}`**\n    \n    - Beskrivning: Uppdaterar en befintlig författarpost baserat på ID.\n        \n- **DELETE** **`/api/authors/{{author_id}}`**\n    \n    - Beskrivning: Tar bort en författarpost baserat på ID.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "33817987"
+		"_exporter_id": "33817987",
+		"_collection_link": "https://dfg888.postman.co/workspace/dfg-Workspace~28370a7f-6996-446d-88bc-82a8d2bee6e5/collection/33817987-175c137c-216b-4bdf-80da-04f014ab1234?action=share&source=collection_link&creator=33817987"
 	},
 	"item": [
 		{
@@ -19,6 +20,7 @@
 								"exec": [
 									"pm.test('Status code is 200', function () {",
 									"    pm.response.to.have.status(200);",
+									"    pm.expect(pm.response.json().books.some(book => book.Name === pm.variables.get('book_name'))).to.be.true;",
 									"});",
 									""
 								],
@@ -31,12 +33,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/books?name=Awesome Steel Chair 1",
-							"protocol": "http",
+							"raw": "{{base_url}}/api/books?name={{book_name}}",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "3000",
 							"path": [
 								"api",
 								"books"
@@ -44,7 +44,7 @@
 							"query": [
 								{
 									"key": "name",
-									"value": "Awesome Steel Chair 1"
+									"value": "{{book_name}}"
 								}
 							]
 						}
@@ -74,12 +74,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/books?name=Awesome Steel Chair 1",
-							"protocol": "http",
+							"raw": "{{base_url}}/api/books?name={{book_name}}",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "3000",
 							"path": [
 								"api",
 								"books"
@@ -87,7 +85,7 @@
 							"query": [
 								{
 									"key": "name",
-									"value": "Awesome Steel Chair 1"
+									"value": "{{book_name}}"
 								}
 							]
 						}
@@ -115,12 +113,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/books?name=!%#",
-							"protocol": "http",
+							"raw": "{{base_url}}/api/books?name={{invalid_book_name}}#",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "3000",
 							"path": [
 								"api",
 								"books"
@@ -128,7 +124,7 @@
 							"query": [
 								{
 									"key": "name",
-									"value": "!%"
+									"value": "{{invalid_book_name}}"
 								}
 							],
 							"hash": ""
@@ -155,13 +151,13 @@
 									"    var jsonData = pm.response.json();",
 									"    // Check if the response is not empty",
 									"    if (jsonData.length > 0) {",
-									"        pm.expect(jsonData[0].Name).to.include(\"the cute duck 3\");",
-									"        pm.expect(jsonData[0].ISBN).to.eql(\"123456567\");",
-									"        pm.expect(jsonData[0].Price).to.eql(2000);",
-									"        pm.expect(jsonData[0].Genre).to.include(\"Horror\");",
+									"        pm.expect(jsonData[0].Name).to.include(pm.variables.get('book_name'));",
+									"        pm.expect(jsonData[0].ISBN).to.eql(pm.variables.get('isbn'));",
+									"        pm.expect(jsonData[0].Price).to.eql(pm.variables.get('price'));",
+									"        pm.expect(jsonData[0].Genre).to.include(pm.variables.get('genre'));",
 									"        // Correctly handle and parse the release date",
 									"        var releaseDate = new Date(jsonData[0].ReleaseDate);",
-									"        pm.expect(releaseDate.toISOString().slice(0, 10)).to.eql(\"2024-03-20\");",
+									"        pm.expect(releaseDate.toISOString().slice(0, 10)).to.eql(pm.variables.get('release_date'));",
 									"    } else {",
 									"        console.log(\"No data matches the filters\");",
 									"        // Optionally, you can fail the test if no data is expected to be empty",
@@ -179,12 +175,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/books?name=Awesome Steel Chair 1&isbn=3629663257859&price=353&genre=Jazz&releaseDate=2021-08-12",
-							"protocol": "http",
+							"raw": "{{base_url}}/api/books?name={{book_name}}&isbn={{isbn}}&price={{price}}&genre={{genre}}&releaseDate={{release_date}}",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "3000",
 							"path": [
 								"api",
 								"books"
@@ -192,23 +186,23 @@
 							"query": [
 								{
 									"key": "name",
-									"value": "Awesome Steel Chair 1"
+									"value": "{{book_name}}"
 								},
 								{
 									"key": "isbn",
-									"value": "3629663257859"
+									"value": "{{isbn}}"
 								},
 								{
 									"key": "price",
-									"value": "353"
+									"value": "{{price}}"
 								},
 								{
 									"key": "genre",
-									"value": "Jazz"
+									"value": "{{genre}}"
 								},
 								{
 									"key": "releaseDate",
-									"value": "2021-08-12"
+									"value": "{{release_date}}"
 								}
 							]
 						},
@@ -232,7 +226,7 @@
 									"pm.test(\"Response contains correct number of items\", function () {\r",
 									"    let responseData = pm.response.json();\r",
 									"    pm.expect(responseData.books).to.be.an('array');\r",
-									"    pm.expect(responseData.books.length).to.equal(25);  // Checks if the number of books returned matches the limit\r",
+									"    pm.expect(responseData.books.length).to.equal(parseInt(pm.variables.get('limit')));  // Checks if the number of books returned matches the limit\r",
 									"});\r",
 									"\r",
 									""
@@ -246,12 +240,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/books?page=1&limit=25",
-							"protocol": "http",
+							"raw": "{{base_url}}/api/books?page={{page}}&limit={{limit}}",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "3000",
 							"path": [
 								"api",
 								"books"
@@ -259,11 +251,11 @@
 							"query": [
 								{
 									"key": "page",
-									"value": "1"
+									"value": "{{page}}"
 								},
 								{
 									"key": "limit",
-									"value": "25"
+									"value": "{{limit}}"
 								}
 							]
 						}
@@ -299,7 +291,6 @@
 							{
 								"key": "Content-Type",
 								"value": " application/json; charset=utf-8",
-								"type": "text",
 								"disabled": true
 							}
 						],
@@ -313,12 +304,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/books?name=En bok med ÄÅÖ",
-							"protocol": "http",
+							"raw": "{{base_url}}/api/books?name={{special_character_book_name}}",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "3000",
 							"path": [
 								"api",
 								"books"
@@ -326,7 +315,7 @@
 							"query": [
 								{
 									"key": "name",
-									"value": "En bok med ÄÅÖ"
+									"value": "{{special_character_book_name}}"
 								}
 							]
 						}
@@ -383,12 +372,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/books",
-							"protocol": "http",
+							"raw": "{{base_url}}/api/books",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "3000",
 							"path": [
 								"api",
 								"books"
@@ -429,16 +416,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/books/662aa196cdec73d79be79845",
-							"protocol": "http",
+							"raw": "{{base_url}}/api/books/{{book_id}}",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "3000",
 							"path": [
 								"api",
 								"books",
-								"662aa196cdec73d79be79845"
+								"{{book_id}}"
 							]
 						}
 					},
@@ -479,12 +464,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/books",
-							"protocol": "http",
+							"raw": "{{base_url}}/api/books",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "3000",
 							"path": [
 								"api",
 								"books"
@@ -566,12 +549,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/books",
-							"protocol": "http",
+							"raw": "{{base_url}}/api/books",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "3000",
 							"path": [
 								"api",
 								"books"
@@ -615,7 +596,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:3000/api/authors/661c40e1fee634aff5010872",
+									"raw": "http://localhost:3000/api/authors/66245b069b8e686f67f2fefe",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -624,7 +605,7 @@
 									"path": [
 										"api",
 										"authors",
-										"661c40e1fee634aff5010872"
+										"66245b069b8e686f67f2fefe"
 									]
 								}
 							},
@@ -1304,6 +1285,85 @@
 					"response": []
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "book_name",
+			"value": "Awesome Steel Chair 1",
+			"type": "string"
+		},
+		{
+			"key": "invalid_book_name",
+			"value": "!%#",
+			"type": "string"
+		},
+		{
+			"key": "isbn",
+			"value": "3629663257859",
+			"type": "string"
+		},
+		{
+			"key": "price",
+			"value": "353",
+			"type": "string"
+		},
+		{
+			"key": "genre",
+			"value": "Jazz",
+			"type": "string"
+		},
+		{
+			"key": "release_date",
+			"value": "2021-08-12",
+			"type": "string"
+		},
+		{
+			"key": "page",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "limit",
+			"value": "25",
+			"type": "string"
+		},
+		{
+			"key": "special_character_book_name",
+			"value": "En bok med ÄÅÖ",
+			"type": "string"
+		},
+		{
+			"key": "book_id",
+			"value": "662aa196cdec73d79be79845",
+			"type": "string"
 		}
 	]
 }
